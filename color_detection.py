@@ -1,11 +1,13 @@
 import cv2
 import numpy as np
 import pandas as pd
-
+import argparse
 
 #Creating argument parser to take image path from command line
-
-img_path = 'colorpic.jpg'
+ap = argparse.ArgumentParser()
+ap.add_argument('-i', '--image', required=True, help="Image Path")
+args = vars(ap.parse_args())
+img_path = args['image']
 
 #Reading the image with opencv
 img = cv2.imread(img_path)
@@ -27,7 +29,6 @@ def getColorName(R,G,B):
             minimum = d
             cname = csv.loc[i,"color_name"]
     return cname
-    
 
 #function to get x,y coordinates of mouse double click
 def draw_function(event, x,y,flags,param):
@@ -43,7 +44,6 @@ def draw_function(event, x,y,flags,param):
        
 cv2.namedWindow('image')
 cv2.setMouseCallback('image',draw_function)
-
 
 while(1):
 
@@ -62,14 +62,11 @@ while(1):
         #For very light colours we will display text in black colour
         if(r+g+b>=600):
             cv2.putText(img, text,(50,50),2,0.8,(0,0,0),2,cv2.LINE_AA)
-
-
-        print('Color is :',text)
             
         clicked=False
 
     #Break the loop when user hits 'esc' key    
     if cv2.waitKey(20) & 0xFF ==27:
         break
-   
+    
 cv2.destroyAllWindows()
